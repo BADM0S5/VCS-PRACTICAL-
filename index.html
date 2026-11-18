@@ -190,9 +190,89 @@
             <h2>Monthly Expense Reports</h2>
             <p>Summarized monthly statements, category aggregates, and export options.</p>
           </div>
-          <div id="reports-container" class="placeholder-container">
-            <div class="feature-badge">Branch: <code>feature/monthly-reports</code></div>
-            <p class="placeholder-text">Monthly summary metrics, filter controls, and report tables will be built here.</p>
+          <div id="reports-container">
+            <!-- Filter & Action Bar -->
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; background: #f8fafc; padding: 1rem 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <label for="report-month-select" style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">Select Month:</label>
+                <select id="report-month-select" class="form-control" style="width: auto; min-width: 200px;">
+                  <!-- Dynamically populated from available dates -->
+                </select>
+              </div>
+              <button id="btn-export-csv" class="btn btn-primary">
+                <span>📥</span> Export Monthly Report to CSV
+              </button>
+            </div>
+
+            <!-- Empty State Fallback -->
+            <div id="reports-empty-state" class="placeholder-container" style="display: none;">
+              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📑</div>
+              <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">No Records Found For Selected Month</h3>
+              <p class="placeholder-text">Try selecting another month or record new transactions under "Add Expense".</p>
+            </div>
+
+            <!-- Reports Content -->
+            <div id="reports-content">
+              <!-- KPI Metric Cards -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Total Monthly Spend</div>
+                  <div id="report-kpi-total" style="font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-top: 0.35rem;">₹0.00</div>
+                </div>
+                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Top Category</div>
+                  <div id="report-kpi-top-category" style="font-size: 1.4rem; font-weight: 700; color: #0f172a; margin-top: 0.35rem;">-</div>
+                </div>
+                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Avg Daily Spend</div>
+                  <div id="report-kpi-avg-daily" style="font-size: 1.4rem; font-weight: 700; color: #0f172a; margin-top: 0.35rem;">₹0.00</div>
+                </div>
+                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Transactions Count</div>
+                  <div id="report-kpi-count" style="font-size: 1.4rem; font-weight: 700; color: #0f172a; margin-top: 0.35rem;">0</div>
+                </div>
+              </div>
+
+              <!-- Categorized Breakdown Table -->
+              <div style="margin-bottom: 1.5rem;">
+                <h3 style="font-size: 1.05rem; font-weight: 600; margin-bottom: 0.75rem;">Category Breakdown</h3>
+                <div class="table-responsive">
+                  <table class="data-table" id="report-category-table">
+                    <thead>
+                      <tr>
+                        <th>Category</th>
+                        <th>Transactions</th>
+                        <th>Total Spent</th>
+                        <th>% of Monthly Total</th>
+                      </tr>
+                    </thead>
+                    <tbody id="report-category-tbody">
+                      <!-- Populated dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Monthly Itemized Transactions Table -->
+              <div>
+                <h3 style="font-size: 1.05rem; font-weight: 600; margin-bottom: 0.75rem;">Itemized Monthly Transactions</h3>
+                <div class="table-responsive">
+                  <table class="data-table" id="report-itemized-table">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th style="text-align: right;">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="report-itemized-tbody">
+                      <!-- Populated dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
