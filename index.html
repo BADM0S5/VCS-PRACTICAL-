@@ -130,9 +130,55 @@
             <h2>Spending Insights & Analytics</h2>
             <p>Visual breakdowns by category and spending trends over time.</p>
           </div>
-          <div id="charts-container" class="placeholder-container">
-            <div class="feature-badge">Branch: <code>feature/charts</code></div>
-            <p class="placeholder-text">Chart.js visualizations and category distribution graphs will be mounted here.</p>
+          <div id="charts-container">
+            <!-- Empty state fallback -->
+            <div id="charts-empty-state" class="placeholder-container" style="display: none;">
+              <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📊</div>
+              <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">No Expense Data Available</h3>
+              <p class="placeholder-text">Add your expenses under the "Add Expense" tab to generate visual spending analytics.</p>
+            </div>
+
+            <!-- Charts Content -->
+            <div id="charts-content">
+              <!-- Summary Mini-Cards -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem;">
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Total Analytics Tracked</div>
+                  <div id="charts-stat-total" style="font-size: 1.35rem; font-weight: 700; color: var(--primary); margin-top: 0.25rem;">₹0.00</div>
+                </div>
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem;">
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Highest Spending Category</div>
+                  <div id="charts-stat-top-category" style="font-size: 1.35rem; font-weight: 700; color: #0f172a; margin-top: 0.25rem;">-</div>
+                </div>
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1rem;">
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Active Categories</div>
+                  <div id="charts-stat-categories-count" style="font-size: 1.35rem; font-weight: 700; color: #0f172a; margin-top: 0.25rem;">0</div>
+                </div>
+              </div>
+
+              <!-- Two Column Charts Layout -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; align-items: start;">
+                <!-- Doughnut Chart Container -->
+                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+                  <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🍩</span> Category Distribution (%)
+                  </h3>
+                  <div style="position: relative; height: 280px; display: flex; align-items: center; justify-content: center;">
+                    <canvas id="category-doughnut-chart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Bar Chart Container -->
+                <div style="background: #ffffff; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+                  <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📶</span> Category Expenditure (₹)
+                  </h3>
+                  <div style="position: relative; height: 280px;">
+                    <canvas id="spending-bar-chart"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
