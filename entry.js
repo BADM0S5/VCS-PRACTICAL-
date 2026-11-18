@@ -1,6 +1,7 @@
 /**
  * Module: Expense Entry
- * Handles expense input form, category selection, and strict validation.
+ * Handles expense input form, category selection, strict validation,
+ * and the recent transactions list with delete capability.
  * Developed on branch: feature/expense-entry
  */
 
@@ -89,6 +90,113 @@
   }
 
   /**
+   * Formats a raw number into currency representation
+   * @param {number} val
+   * @returns {string}
+   */
+  function formatCurrency(val) {
+    return '₹' + Number(val).toLocaleString('en-IN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  /**
+   * Renders the 5 most recent transactions in the table
+   */
+  function renderRecentTransactions() {
+    const tbody = document.getElementById('recent-transactions-body');
+    const badge = document.getElementById('recent-count-badge');
+    if (!tbody) return;
+
+    const allExpenses = window.ExpenseStorage ? window.ExpenseStorage.getExpenses() : [];
+    
+    // Sort transactions by date descending, then by creation
+    const sorted = [...allExpenses].sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      if (dateB !== dateA) return dateB - dateA;
+      return (new Date(b.createdAt || 0).getTime()) - (new Date(a.createdAt || 0).getTime());
+    });
+
+    const recentFive = sorted.slice(0, 5);
+
+    if (badge) {
+      badge.textContent = `${recentFive.length} shown of ${allExpenses.length}`;
+    }
+
+    if (recentFive.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+            No transactions found. Add your first expense above!
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = recentFive.map(item => `
+      <tr data-id="${item.id}">
+        <td style="font-weight: 500; white-space: nowrap;">${item.date}</td>
+        <td>
+          <strong>${escapeHtml(item.title)}</strong>
+        </td>
+        <td>
+          <span style="display: inline-block; padding: 0.2rem 0.55rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; background: #f1f5f9; color: var(--text-main); border: 1px solid var(--border-color);">
+            ${escapeHtml(item.category)}
+          </span>
+        </td>
+        <td style="font-weight: 700; color: #0f172a;">
+          ${formatCurrency(item.amount)}
+        </td>
+        <td style="text-align: right;">
+          <button class="btn btn-danger btn-delete-expense" data-id="${item.id}" data-title="${escapeHtml(item.title)}" style="padding: 0.3rem 0.7rem; font-size: 0.8rem; border-radius: var(--radius-sm);">
+            <span>🗑️</span> Delete
+          </button>
+        </td>
+      </tr>
+    `).join('');
+
+    // Attach delete listeners
+    tbody.querySelectorAll('.btn-delete-expense').forEach(btn => {
+      btn.addEventListener('click', handleDeleteClick);
+    });
+  }
+
+  /**
+   * Escape HTML to prevent injection
+   */
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  /**
+   * Handles deletion of an individual expense
+   */
+  function handleDeleteClick(e) {
+    const btn = e.currentTarget;
+    const id = btn.getAttribute('data-id');
+    const title = btn.getAttribute('data-title') || 'this transaction';
+
+    if (confirm(`Are you sure you want to delete "${title}"?`)) {
+      if (window.ExpenseStorage && window.ExpenseStorage.deleteExpense) {
+        const deleted = window.ExpenseStorage.deleteExpense(id);
+        if (deleted) {
+          showAlert(`Transaction "${title}" was deleted.`, 'success');
+          setTimeout(clearAlert, 3000);
+        }
+      }
+    }
+  }
+
+  /**
    * Handles Form Submission
    * @param {Event} e
    */
@@ -122,7 +230,7 @@
 
     if (window.ExpenseStorage && window.ExpenseStorage.saveExpense) {
       window.ExpenseStorage.saveExpense(newRecord);
-      showAlert(`Expense "${title}" (₹${amount.toFixed(2)}) recorded successfully!`, 'success');
+      showAlert(`Expense "${title}" (${formatCurrency(amount)}) recorded successfully!`, 'success');
       
       // Reset form fields
       titleInput.value = '';
@@ -136,7 +244,7 @@
     }
   }
 
-  // Setup form event listeners
+  // Setup form & table event listeners
   function initExpenseEntry() {
     const form = document.getElementById('expense-form');
     if (!form) return;
@@ -152,7 +260,15 @@
       }
     });
 
-    console.log('[Module: Entry] Expense input form initialized with validation.');
+    // Render initial recent transactions
+    renderRecentTransactions();
+
+    // Listen for storage updates across tabs/modules to keep table in sync
+    window.addEventListener('expensesUpdated', () => {
+      renderRecentTransactions();
+    });
+
+    console.log('[Module: Entry] Initialized with form validation and recent transactions list.');
   }
 
   document.addEventListener('DOMContentLoaded', initExpenseEntry);
