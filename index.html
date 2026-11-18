@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Expense Tracker</title>
+  <!-- Google Fonts for modern typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN for Analytics module -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">💳</div>
+        <div>
+          <h1>ExpenseTrack</h1>
+          <p class="subtitle">Modular VCS Demo Project</p>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pill">
+          <span class="stat-label">Total Tracked:</span>
+          <span class="stat-value" id="header-total">$0.00</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs" role="tablist">
+      <button class="tab-btn active" data-tab="tab-entry" role="tab" aria-selected="true">
+        <span>➕</span> Add Expense
+      </button>
+      <button class="tab-btn" data-tab="tab-charts" role="tab" aria-selected="false">
+        <span>📊</span> Analytics Charts
+      </button>
+      <button class="tab-btn" data-tab="tab-reports" role="tab" aria-selected="false">
+        <span>📑</span> Monthly Reports
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Section 1: Add Expense (Owned by feature/expense-entry branch) -->
+      <section id="tab-entry" class="tab-panel active" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h2>Record New Transaction</h2>
+            <p>Enter your daily personal or academic expenses.</p>
+          </div>
+          <div id="expense-entry-container" class="placeholder-container">
+            <div class="feature-badge">Branch: <code>feature/expense-entry</code></div>
+            <p class="placeholder-text">Expense entry form and recent transaction list will be implemented here.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Analytics Charts (Owned by feature/charts branch) -->
+      <section id="tab-charts" class="tab-panel" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h2>Spending Insights & Analytics</h2>
+            <p>Visual breakdowns by category and spending trends over time.</p>
+          </div>
+          <div id="charts-container" class="placeholder-container">
+            <div class="feature-badge">Branch: <code>feature/charts</code></div>
+            <p class="placeholder-text">Chart.js visualizations and category distribution graphs will be mounted here.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Monthly Reports (Owned by feature/monthly-reports branch) -->
+      <section id="tab-reports" class="tab-panel" role="tabpanel">
+        <div class="card">
+          <div class="card-header">
+            <h2>Monthly Expense Reports</h2>
+            <p>Summarized monthly statements, category aggregates, and export options.</p>
+          </div>
+          <div id="reports-container" class="placeholder-container">
+            <div class="feature-badge">Branch: <code>feature/monthly-reports</code></div>
+            <p class="placeholder-text">Monthly summary metrics, filter controls, and report tables will be built here.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Personal Expense Tracker &bull; VCS Academic Project &bull; Built with HTML5, CSS3, & Vanilla JS</p>
+    </footer>
+  </div>
+
+  <!-- Scripts: loaded in dependency order -->
+  <script src="storage.js"></script>
+  <script src="entry.js"></script>
+  <script src="charts.js"></script>
+  <script src="reports.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
